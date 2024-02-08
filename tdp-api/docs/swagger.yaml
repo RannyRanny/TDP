@@ -1,0 +1,814 @@
+definitions:
+  model.Day:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      end_hour:
+        type: integer
+      id:
+        type: integer
+      start_hour:
+        type: integer
+      task_categories:
+        additionalProperties:
+          $ref: '#/definitions/model.TaskCategory'
+        description: Пример использования встраивания для устранения дублирования.
+        type: object
+      tasks:
+        additionalProperties:
+          $ref: '#/definitions/model.Task'
+        type: object
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/model.TelegramAuthData'
+      user_id:
+        type: integer
+    type: object
+  model.Task:
+    properties:
+      category:
+        $ref: '#/definitions/model.TaskCategory'
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_completed:
+        type: boolean
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/model.TelegramAuthData'
+      user_id:
+        type: integer
+    type: object
+  model.TaskCategory:
+    properties:
+      color:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/model.TelegramAuthData'
+      user_id:
+        type: integer
+    type: object
+  model.TelegramAuthData:
+    properties:
+      auth_date:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      first_name:
+        type: string
+      hash:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      photo_url:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  model.TemplateDay:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      end_hour:
+        type: integer
+      id:
+        type: integer
+      start_hour:
+        type: integer
+      task_categories:
+        additionalProperties:
+          $ref: '#/definitions/model.TaskCategory'
+        description: Пример использования встраивания для устранения дублирования.
+        type: object
+      tasks:
+        additionalProperties:
+          $ref: '#/definitions/model.TemplateTask'
+        type: object
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/model.TelegramAuthData'
+      user_id:
+        type: integer
+    type: object
+  model.TemplateTask:
+    properties:
+      category:
+        $ref: '#/definitions/model.TaskCategory'
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_completed:
+        type: boolean
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/model.TelegramAuthData'
+      user_id:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /categories:
+    post:
+      consumes:
+      - application/json
+      description: Add a new task category
+      parameters:
+      - description: Task Category to add
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/model.TaskCategory'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.TaskCategory'
+      summary: Create a new task category
+      tags:
+      - categories
+  /categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a task category by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Delete a task category
+      tags:
+      - categories
+    get:
+      consumes:
+      - application/json
+      description: Get details of a task category by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TaskCategory'
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a task category
+      tags:
+      - categories
+    put:
+      consumes:
+      - application/json
+      description: Update task category details by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Task Category body to update
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/model.TaskCategory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TaskCategory'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Update a task category
+      tags:
+      - categories
+  /categories/user/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all task categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.TaskCategory'
+            type: array
+      summary: Get list of task categories
+      tags:
+      - categories
+  /day:
+    post:
+      consumes:
+      - application/json
+      description: Add a new template day with categories
+      parameters:
+      - description: Create Template Day
+        in: body
+        name: Day
+        required: true
+        schema:
+          $ref: '#/definitions/model.Day'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Day'
+        "400":
+          description: Not found
+          schema:
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            type: object
+      summary: Create a new template day
+      tags:
+      - Days
+  /day/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Delete a template day
+      tags:
+      - Days
+    get:
+      consumes:
+      - application/json
+      description: Get details of a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Day'
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a template day
+      tags:
+      - Days
+    put:
+      consumes:
+      - application/json
+      description: Update a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Template Day
+        in: body
+        name: Day
+        required: true
+        schema:
+          $ref: '#/definitions/model.Day'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Day'
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Update a template day
+      tags:
+      - Days
+  /day/template:
+    post:
+      consumes:
+      - application/json
+      description: Add a new template day with categories
+      parameters:
+      - description: Create Template Day
+        in: body
+        name: templateDay
+        required: true
+        schema:
+          $ref: '#/definitions/model.TemplateDay'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.TemplateDay'
+        "400":
+          description: Not found
+          schema:
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            type: object
+      summary: Create a new template day
+      tags:
+      - templateDays
+  /day/template/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Delete a template day
+      tags:
+      - templateDays
+    get:
+      consumes:
+      - application/json
+      description: Get details of a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TemplateDay'
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a template day
+      tags:
+      - templateDays
+    put:
+      consumes:
+      - application/json
+      description: Update a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Template Day
+        in: body
+        name: templateDay
+        required: true
+        schema:
+          $ref: '#/definitions/model.TemplateDay'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TemplateDay'
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Update a template day
+      tags:
+      - templateDays
+  /day/template/user/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.TemplateDay'
+            type: array
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a template day
+      tags:
+      - templateDays
+  /day/user/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Day'
+            type: array
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a template day
+      tags:
+      - Days
+  /tasks:
+    post:
+      consumes:
+      - application/json
+      description: add by json task
+      parameters:
+      - description: Add Task
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/model.Task'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Task'
+      summary: Create a new task
+      tags:
+      - tasks
+  /tasks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a task by ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Delete a task
+      tags:
+      - tasks
+    get:
+      consumes:
+      - application/json
+      description: Get details of a task by ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Task'
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a task
+      tags:
+      - tasks
+    put:
+      consumes:
+      - application/json
+      description: Update task details by ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Task body to update
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/model.Task'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Task'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Update a task
+      tags:
+      - tasks
+  /tasks/template:
+    post:
+      consumes:
+      - application/json
+      description: add by json task
+      parameters:
+      - description: Add Task
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/model.TemplateTask'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TemplateTask'
+      summary: Create a new task
+      tags:
+      - tasks
+  /tasks/template/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a task by ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Delete a task
+      tags:
+      - tasks
+    get:
+      consumes:
+      - application/json
+      description: Get details of a task by ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TemplateTask'
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a task
+      tags:
+      - tasks
+    put:
+      consumes:
+      - application/json
+      description: Update task details by ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Task body to update
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/model.TemplateTask'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TemplateTask'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Update a task
+      tags:
+      - tasks
+  /tasks/template/user/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Task'
+            type: array
+      summary: Get list of tasks
+      tags:
+      - tasks
+  /tasks/user/:userId:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Task'
+            type: array
+      summary: Get list of tasks
+      tags:
+      - tasks
+  /telegram/auth:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user through Telegram data and saves or updates
+        the user's data in the repository.
+      parameters:
+      - description: Data for authentication
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.TelegramAuthData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: The Telegram User ID of the authenticated user
+          schema:
+            type: integer
+        "400":
+          description: description of the error
+          schema:
+            type: object
+        "500":
+          description: Invalid data signature or internal server error
+          schema:
+            type: object
+      summary: Telegram Authentication
+      tags:
+      - telegram
+swagger: "2.0"
