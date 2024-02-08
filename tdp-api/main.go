@@ -21,7 +21,10 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&model.Task{}, &model.TaskCategory{}, &model.TelegramAuthData{})
+	db.AutoMigrate(&model.Task{})
+	db.AutoMigrate(&model.TaskCategory{})
+	db.AutoMigrate(&model.TemplateDay{})
+	err = db.AutoMigrate(&model.TelegramAuthData{})
 
 	r := gin.Default()
 
@@ -33,6 +36,15 @@ func main() {
 	r.POST("/tasks", taskHandler.CreateTask)
 	r.PUT("/tasks/:id", taskHandler.UpdateTask)
 	r.DELETE("/tasks/:id", taskHandler.DeleteTask)
+
+	templateTaskRepository := repository.NewTemplateTaskRepository(db)
+	templateTaskHandler := handler.NewTemplateTaskHandler(templateTaskRepository)
+
+	r.GET("/tasks/template", templateTaskHandler.GetTasks)
+	r.GET("/tasks/template/:id", templateTaskHandler.GetTask)
+	r.POST("/tasks/template", templateTaskHandler.CreateTask)
+	r.PUT("/tasks/template/:id", templateTaskHandler.UpdateTask)
+	r.DELETE("/tasks/template/:id", templateTaskHandler.DeleteTask)
 
 	taskCategoryRepository := repository.NewTaskCategoryRepository(db)
 	taskCategoryHandler := handler.NewTaskCategoryHandler(taskCategoryRepository)
@@ -49,5 +61,12 @@ func main() {
 	telegramAuthHandler := handler.NewTelegramHandler(telegramRepository)
 	r.POST("/telegram_auth", telegramAuthHandler.TelegramAuth)
 
-	r.Run() // listen and serve on 0.0.0.0:8080
+	templateDayRepository := repository.NewGormTemplateDayRepository(db)
+	templateDayHandler := handler.NewTemplateDayHandler(templateDayRepository)
+	r.POST("/day/template", templateDayHandler.CreateTemplateDay)
+	r.GET("/day/template/:id", templateDayHandler.GetTemplateDay)
+	r.PUT("/day/template/:id", templateDayHandler.UpdateTemplateDay)
+	r.DELETE("/day/template/:id", templateDayHandler.DeleteTemplateDay)
+
+	r.Run()
 }

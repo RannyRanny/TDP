@@ -18,11 +18,22 @@ type TelegramHandler struct {
 	repo repository.TelegramAuthRepository
 }
 
-// NewTaskHandler создает экземпляр TaskHandler
+// NewTelegramHandler создает экземпляр TelegramHandler
 func NewTelegramHandler(repo repository.TelegramAuthRepository) *TelegramHandler {
 	return &TelegramHandler{repo: repo}
 }
 
+// TelegramAuth godoc
+// @Summary Telegram Authentication
+// @Description Authenticates a user through Telegram data and saves or updates the user's data in the repository.
+// @Tags telegram
+// @Accept  json
+// @Produce  json
+// @Param data body model.TelegramAuthData true "Data for authentication"
+// @Success 200 {integer} int64 "The Telegram User ID of the authenticated user"
+// @Failure 400 {object} object "description of the error"
+// @Failure 500 {object} object "Invalid data signature or internal server error"
+// @Router /telegram/auth [post]
 func (h *TelegramHandler) TelegramAuth(c *gin.Context) {
 	var data model.TelegramAuthData
 
@@ -34,7 +45,7 @@ func (h *TelegramHandler) TelegramAuth(c *gin.Context) {
 	botToken := ""
 
 	if checkTelegramAuthData(data, botToken) {
-		_, err := h.repo.FindByUserID(data.UserID)
+		_, err := h.repo.FindByUserID(data.ID)
 		if err != nil {
 			h.repo.Save(data)
 		}

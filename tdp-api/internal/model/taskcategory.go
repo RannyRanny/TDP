@@ -12,4 +12,5 @@ type TaskCategory struct {
 	DeletedAt   *time.Time `json:"deleted_at" gorm:"index"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
+	Color       string     `json:"color"`
 }

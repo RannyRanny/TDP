@@ -195,6 +195,168 @@ const docTemplate = `{
                 }
             }
         },
+        "/day/template": {
+            "post": {
+                "description": "Add a new template day with categories",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templateDays"
+                ],
+                "summary": "Create a new template day",
+                "parameters": [
+                    {
+                        "description": "Create Template Day",
+                        "name": "templateDay",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateDay"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateDay"
+                        }
+                    },
+                    "400": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/day/template/{id}": {
+            "get": {
+                "description": "Get details of a template day by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templateDays"
+                ],
+                "summary": "Get a template day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template Day ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateDay"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a template day by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templateDays"
+                ],
+                "summary": "Update a template day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template Day ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Template Day",
+                        "name": "templateDay",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateDay"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateDay"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a template day by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templateDays"
+                ],
+                "summary": "Delete a template day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template Day ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
         "/tasks": {
             "get": {
                 "description": "Get details of all tasks",
@@ -248,6 +410,186 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Task"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/template": {
+            "get": {
+                "description": "Get details of all tasks",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Get list of tasks",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Task"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "add by json task",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Create a new task",
+                "parameters": [
+                    {
+                        "description": "Add Task",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateTask"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateTask"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/template/{id}": {
+            "get": {
+                "description": "Get details of a task by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Get a task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateTask"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update task details by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Update a task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Task body to update",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateTask"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.TemplateTask"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a task by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Delete a task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
                         }
                     }
                 }
@@ -374,14 +716,62 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/telegram/auth": {
+            "post": {
+                "description": "Authenticates a user through Telegram data and saves or updates the user's data in the repository.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "telegram"
+                ],
+                "summary": "Telegram Authentication",
+                "parameters": [
+                    {
+                        "description": "Data for authentication",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TelegramAuthData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Telegram User ID of the authenticated user",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "description of the error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid data signature or internal server error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "model.Task": {
             "type": "object",
             "properties": {
+                "category": {
+                    "$ref": "#/definitions/model.TaskCategory"
+                },
                 "category_id": {
-                    "description": "Внешний ключ для связи с TaskCategory",
                     "type": "integer"
                 },
                 "created_at": {
@@ -399,14 +789,6 @@ const docTemplate = `{
                 "is_completed": {
                     "type": "boolean"
                 },
-                "taskCategory": {
-                    "description": "Связь с TaskCategory",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/model.TaskCategory"
-                        }
-                    ]
-                },
                 "title": {
                     "type": "string"
                 },
@@ -418,6 +800,9 @@ const docTemplate = `{
         "model.TaskCategory": {
             "type": "object",
             "properties": {
+                "color": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -431,6 +816,114 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.TelegramAuthData": {
+            "type": "object",
+            "properties": {
+                "auth_date": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "photo_url": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.TemplateDay": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "endHour": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "startHour": {
+                    "type": "integer"
+                },
+                "taskCategories": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/model.TaskCategory"
+                    }
+                },
+                "taskCategoriesJson": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.TelegramAuthData"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.TemplateTask": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "$ref": "#/definitions/model.TaskCategory"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_completed": {
+                    "type": "boolean"
+                },
+                "title": {
                     "type": "string"
                 },
                 "updated_at": {

@@ -7,7 +7,7 @@ import (
 
 type TelegramAuthRepository interface {
 	Save(authData model.TelegramAuthData) (model.TelegramAuthData, error)
-	FindByUserID(userID int64) (model.TelegramAuthData, error)
+	FindByUserID(userID uint) (model.TelegramAuthData, error)
 }
 
 type GormTelegramAuthRepository struct {
@@ -23,8 +23,8 @@ func (r *GormTelegramAuthRepository) Save(authData model.TelegramAuthData) (mode
 	return authData, result.Error
 }
 
-func (r *GormTelegramAuthRepository) FindByUserID(userID int64) (model.TelegramAuthData, error) {
+func (r *GormTelegramAuthRepository) FindByUserID(userID uint) (model.TelegramAuthData, error) {
 	var authData model.TelegramAuthData
-	result := r.db.Where("user_id = ?", userID).First(&authData)
+	result := r.db.Where("id = ?", userID).First(&authData)
 	return authData, result.Error
 }
