@@ -1,4 +1,32 @@
 definitions:
+  model.Day:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      end_hour:
+        type: integer
+      id:
+        type: integer
+      start_hour:
+        type: integer
+      task_categories:
+        additionalProperties:
+          $ref: '#/definitions/model.TaskCategory'
+        description: Пример использования встраивания для устранения дублирования.
+        type: object
+      tasks:
+        additionalProperties:
+          $ref: '#/definitions/model.Task'
+        type: object
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/model.TelegramAuthData'
+      user_id:
+        type: integer
+    type: object
   model.Task:
     properties:
       category:
@@ -19,6 +47,10 @@ definitions:
         type: string
       updated_at:
         type: string
+      user:
+        $ref: '#/definitions/model.TelegramAuthData'
+      user_id:
+        type: integer
     type: object
   model.TaskCategory:
     properties:
@@ -36,6 +68,10 @@ definitions:
         type: string
       updated_at:
         type: string
+      user:
+        $ref: '#/definitions/model.TelegramAuthData'
+      user_id:
+        type: integer
     type: object
   model.TelegramAuthData:
     properties:
@@ -66,25 +102,26 @@ definitions:
         type: string
       deleted_at:
         type: string
-      endHour:
+      end_hour:
         type: integer
       id:
         type: integer
-      startHour:
+      start_hour:
         type: integer
-      taskCategories:
+      task_categories:
         additionalProperties:
           $ref: '#/definitions/model.TaskCategory'
+        description: Пример использования встраивания для устранения дублирования.
         type: object
-      taskCategoriesJson:
-        items:
-          type: integer
-        type: array
+      tasks:
+        additionalProperties:
+          $ref: '#/definitions/model.TemplateTask'
+        type: object
       updated_at:
         type: string
       user:
         $ref: '#/definitions/model.TelegramAuthData'
-      userID:
+      user_id:
         type: integer
     type: object
   model.TemplateTask:
@@ -107,27 +144,15 @@ definitions:
         type: string
       updated_at:
         type: string
+      user:
+        $ref: '#/definitions/model.TelegramAuthData'
+      user_id:
+        type: integer
     type: object
 info:
   contact: {}
 paths:
   /categories:
-    get:
-      consumes:
-      - application/json
-      description: Get details of all task categories
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.TaskCategory'
-            type: array
-      summary: Get list of task categories
-      tags:
-      - categories
     post:
       consumes:
       - application/json
@@ -230,6 +255,130 @@ paths:
       summary: Update a task category
       tags:
       - categories
+  /categories/user/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all task categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.TaskCategory'
+            type: array
+      summary: Get list of task categories
+      tags:
+      - categories
+  /day:
+    post:
+      consumes:
+      - application/json
+      description: Add a new template day with categories
+      parameters:
+      - description: Create Template Day
+        in: body
+        name: Day
+        required: true
+        schema:
+          $ref: '#/definitions/model.Day'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Day'
+        "400":
+          description: Not found
+          schema:
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            type: object
+      summary: Create a new template day
+      tags:
+      - Days
+  /day/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Delete a template day
+      tags:
+      - Days
+    get:
+      consumes:
+      - application/json
+      description: Get details of a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Day'
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a template day
+      tags:
+      - Days
+    put:
+      consumes:
+      - application/json
+      description: Update a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Template Day
+        in: body
+        name: Day
+        required: true
+        schema:
+          $ref: '#/definitions/model.Day'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Day'
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Update a template day
+      tags:
+      - Days
   /day/template:
     post:
       consumes:
@@ -337,11 +486,17 @@ paths:
       summary: Update a template day
       tags:
       - templateDays
-  /tasks:
+  /day/template/user/{userId}:
     get:
       consumes:
       - application/json
-      description: Get details of all tasks
+      description: Get details of a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -349,11 +504,43 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Task'
+              $ref: '#/definitions/model.TemplateDay'
             type: array
-      summary: Get list of tasks
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a template day
       tags:
-      - tasks
+      - templateDays
+  /day/user/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of a template day by ID
+      parameters:
+      - description: Template Day ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Day'
+            type: array
+        "404":
+          description: Not found
+          schema:
+            type: object
+      summary: Get a template day
+      tags:
+      - Days
+  /tasks:
     post:
       consumes:
       - application/json
@@ -457,22 +644,6 @@ paths:
       tags:
       - tasks
   /tasks/template:
-    get:
-      consumes:
-      - application/json
-      description: Get details of all tasks
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.Task'
-            type: array
-      summary: Get list of tasks
-      tags:
-      - tasks
     post:
       consumes:
       - application/json
@@ -573,6 +744,40 @@ paths:
           schema:
             type: object
       summary: Update a task
+      tags:
+      - tasks
+  /tasks/template/user/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Task'
+            type: array
+      summary: Get list of tasks
+      tags:
+      - tasks
+  /tasks/user/:userId:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Task'
+            type: array
+      summary: Get list of tasks
       tags:
       - tasks
   /telegram/auth:

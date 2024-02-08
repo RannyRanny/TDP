@@ -26,9 +26,10 @@ func NewTaskHandler(repo repository.TaskRepository) *TaskHandler {
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} model.Task
-// @Router /tasks [get]
+// @Router /tasks/user/:userId [get]
 func (h *TaskHandler) GetTasks(c *gin.Context) {
-	tasks, err := h.repo.GetTasks()
+	userId, _ := strconv.Atoi(c.Param("userId"))
+	tasks, err := h.repo.GetTasks(uint(userId))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -145,9 +146,10 @@ func NewTemplateTaskHandler(repo repository.TemplateTaskRepository) *TemplateTas
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} model.Task
-// @Router /tasks/template [get]
+// @Router /tasks/template/user/{userId} [get]
 func (h *TemplateTaskHandler) GetTasks(c *gin.Context) {
-	tasks, err := h.repo.GetTasks()
+	userId, _ := strconv.Atoi(c.Param("userId"))
+	tasks, err := h.repo.GetTasks(uint(userId))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

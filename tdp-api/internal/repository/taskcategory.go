@@ -8,7 +8,7 @@ import (
 
 // TaskCategoryRepository интерфейс репозитория категорий задач
 type TaskCategoryRepository interface {
-	GetCategories() ([]model.TaskCategory, error)
+	GetCategories(userId uint) ([]model.TaskCategory, error)
 	GetCategory(id uint) (model.TaskCategory, error)
 	CreateCategory(category model.TaskCategory) (model.TaskCategory, error)
 	UpdateCategory(category model.TaskCategory) (model.TaskCategory, error)
@@ -24,9 +24,9 @@ func NewTaskCategoryRepository(db *gorm.DB) TaskCategoryRepository {
 	return &taskCategoryRepository{db: db}
 }
 
-func (r *taskCategoryRepository) GetCategories() ([]model.TaskCategory, error) {
+func (r *taskCategoryRepository) GetCategories(userId uint) ([]model.TaskCategory, error) {
 	var categories []model.TaskCategory
-	result := r.db.Find(&categories)
+	result := r.db.Where("user_id = ?", userId).Find(&categories)
 	return categories, result.Error
 }
 

@@ -16,30 +16,6 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/categories": {
-            "get": {
-                "description": "Get details of all task categories",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "categories"
-                ],
-                "summary": "Get list of task categories",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.TaskCategory"
-                            }
-                        }
-                    }
-                }
-            },
             "post": {
                 "description": "Add a new task category",
                 "consumes": [
@@ -68,6 +44,32 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.TaskCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/user/{userId}": {
+            "get": {
+                "description": "Get details of all task categories",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Get list of task categories",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.TaskCategory"
+                            }
                         }
                     }
                 }
@@ -195,6 +197,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/day": {
+            "post": {
+                "description": "Add a new template day with categories",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Days"
+                ],
+                "summary": "Create a new template day",
+                "parameters": [
+                    {
+                        "description": "Create Template Day",
+                        "name": "Day",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Day"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.Day"
+                        }
+                    },
+                    "400": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
         "/day/template": {
             "post": {
                 "description": "Add a new template day with categories",
@@ -234,6 +282,47 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "internal server error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/day/template/user/{userId}": {
+            "get": {
+                "description": "Get details of a template day by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templateDays"
+                ],
+                "summary": "Get a template day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template Day ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.TemplateDay"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
                         "schema": {
                             "type": "object"
                         }
@@ -357,9 +446,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/tasks": {
+        "/day/user/{userId}": {
             "get": {
-                "description": "Get details of all tasks",
+                "description": "Get details of a template day by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -367,21 +456,154 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "tasks"
+                    "Days"
                 ],
-                "summary": "Get list of tasks",
+                "summary": "Get a template day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template Day ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Task"
+                                "$ref": "#/definitions/model.Day"
                             }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/day/{id}": {
+            "get": {
+                "description": "Get details of a template day by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Days"
+                ],
+                "summary": "Get a template day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template Day ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Day"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
                         }
                     }
                 }
             },
+            "put": {
+                "description": "Update a template day by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Days"
+                ],
+                "summary": "Update a template day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template Day ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Template Day",
+                        "name": "Day",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Day"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Day"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a template day by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Days"
+                ],
+                "summary": "Delete a template day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template Day ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks": {
             "post": {
                 "description": "add by json task",
                 "consumes": [
@@ -416,30 +638,6 @@ const docTemplate = `{
             }
         },
         "/tasks/template": {
-            "get": {
-                "description": "Get details of all tasks",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Get list of tasks",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Task"
-                            }
-                        }
-                    }
-                }
-            },
             "post": {
                 "description": "add by json task",
                 "consumes": [
@@ -468,6 +666,32 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.TemplateTask"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/template/user/{userId}": {
+            "get": {
+                "description": "Get details of all tasks",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Get list of tasks",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Task"
+                            }
                         }
                     }
                 }
@@ -590,6 +814,32 @@ const docTemplate = `{
                         "description": "Not found",
                         "schema": {
                             "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/user/:userId": {
+            "get": {
+                "description": "Get details of all tasks",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Get list of tasks",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Task"
+                            }
                         }
                     }
                 }
@@ -765,6 +1015,48 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.Day": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "end_hour": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "start_hour": {
+                    "type": "integer"
+                },
+                "task_categories": {
+                    "description": "Пример использования встраивания для устранения дублирования.",
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/model.TaskCategory"
+                    }
+                },
+                "tasks": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/model.Task"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.TelegramAuthData"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Task": {
             "type": "object",
             "properties": {
@@ -794,6 +1086,12 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.TelegramAuthData"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -820,6 +1118,12 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.TelegramAuthData"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -867,25 +1171,26 @@ const docTemplate = `{
                 "deleted_at": {
                     "type": "string"
                 },
-                "endHour": {
+                "end_hour": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "startHour": {
+                "start_hour": {
                     "type": "integer"
                 },
-                "taskCategories": {
+                "task_categories": {
+                    "description": "Пример использования встраивания для устранения дублирования.",
                     "type": "object",
                     "additionalProperties": {
                         "$ref": "#/definitions/model.TaskCategory"
                     }
                 },
-                "taskCategoriesJson": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
+                "tasks": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/model.TemplateTask"
                     }
                 },
                 "updated_at": {
@@ -894,7 +1199,7 @@ const docTemplate = `{
                 "user": {
                     "$ref": "#/definitions/model.TelegramAuthData"
                 },
-                "userID": {
+                "user_id": {
                     "type": "integer"
                 }
             }
@@ -928,6 +1233,12 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.TelegramAuthData"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         }

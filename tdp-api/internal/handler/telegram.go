@@ -45,9 +45,39 @@ func (h *TelegramHandler) TelegramAuth(c *gin.Context) {
 	botToken := ""
 
 	if checkTelegramAuthData(data, botToken) {
+		c.JSON(http.StatusOK, data.ID)
+		return
+	}
+	c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid data signature"})
+}
+
+// CreateUser godoc
+// @Summary Telegram User Create
+// @Tags telegram
+// @Accept  json
+// @Produce  json
+// @Param data body model.TelegramAuthData true "Data for authentication"
+// @Success 200 {integer} int64 "The Telegram User ID of the authenticated user"
+// @Failure 400 {object} object "description of the error"
+// @Failure 500 {object} object "Invalid data signature or internal server error"
+// @Router /user/create [post]
+func (h *TelegramHandler) CreateUser(c *gin.Context) {
+	var data model.TelegramAuthData
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	botToken := ""
+
+	if checkTelegramAuthData(data, botToken) {
 		_, err := h.repo.FindByUserID(data.ID)
 		if err != nil {
-			h.repo.Save(data)
+			_, err = h.repo.Save(data)
+			if err != nil {
+				return
+			}
 		}
 		c.JSON(http.StatusOK, data.ID)
 		return

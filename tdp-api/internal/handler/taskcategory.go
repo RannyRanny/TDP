@@ -26,9 +26,10 @@ func NewTaskCategoryHandler(repo repository.TaskCategoryRepository) *TaskCategor
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} model.TaskCategory
-// @Router /categories [get]
+// @Router /categories/user/{userId} [get]
 func (h *TaskCategoryHandler) GetCategories(c *gin.Context) {
-	categories, err := h.repo.GetCategories()
+	userId, _ := strconv.Atoi(c.Param("userId"))
+	categories, err := h.repo.GetCategories(uint(userId))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

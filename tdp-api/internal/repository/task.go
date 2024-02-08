@@ -8,7 +8,7 @@ import (
 
 // TaskRepository интерфейс репозитория задач
 type TaskRepository interface {
-	GetTasks() ([]model.Task, error)
+	GetTasks(userId uint) ([]model.Task, error)
 	GetTask(id uint) (model.Task, error)
 	CreateTask(task model.Task) (model.Task, error)
 	UpdateTask(task model.Task) (model.Task, error)
@@ -24,9 +24,9 @@ func NewTaskRepository(db *gorm.DB) TaskRepository {
 	return &taskRepository{db: db}
 }
 
-func (r *taskRepository) GetTasks() ([]model.Task, error) {
+func (r *taskRepository) GetTasks(userId uint) ([]model.Task, error) {
 	var tasks []model.Task
-	result := r.db.Preload("TaskCategory").Find(&tasks)
+	result := r.db.Preload("TaskCategory").Where("user_id = ?", userId).Find(&tasks)
 	return tasks, result.Error
 }
 
@@ -55,7 +55,7 @@ func (r *taskRepository) DeleteTask(id uint) error {
 
 // TemplateTaskRepository интерфейс репозитория задач
 type TemplateTaskRepository interface {
-	GetTasks() ([]model.TemplateTask, error)
+	GetTasks(userId uint) ([]model.TemplateTask, error)
 	GetTask(id uint) (model.TemplateTask, error)
 	CreateTask(task model.TemplateTask) (model.TemplateTask, error)
 	UpdateTask(task model.TemplateTask) (model.TemplateTask, error)
@@ -71,9 +71,9 @@ func NewTemplateTaskRepository(db *gorm.DB) TemplateTaskRepository {
 	return &templateTaskRepository{db: db}
 }
 
-func (r *templateTaskRepository) GetTasks() ([]model.TemplateTask, error) {
+func (r *templateTaskRepository) GetTasks(userId uint) ([]model.TemplateTask, error) {
 	var tasks []model.TemplateTask
-	result := r.db.Preload("TaskCategory").Find(&tasks)
+	result := r.db.Preload("TaskCategory").Where("user_id = ?", userId).Find(&tasks)
 	return tasks, result.Error
 }
 
