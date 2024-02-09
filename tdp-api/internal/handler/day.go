@@ -10,11 +10,11 @@ import (
 
 // DayHandler структура для обработчиков задач
 type DayHandler struct {
-	repo repository.DayRepository
+	repo repository.IDayRepository[model.Day]
 }
 
 // NewDayHandler создает экземпляр DayHandler
-func NewDayHandler(repo repository.DayRepository) *DayHandler {
+func NewDayHandler(repo repository.IDayRepository[model.Day]) *DayHandler {
 	return &DayHandler{repo: repo}
 }
 
@@ -145,11 +145,11 @@ func (h *DayHandler) GetDays(c *gin.Context) {
 
 // TemplateDayHandler структура для обработчиков задач
 type TemplateDayHandler struct {
-	repo repository.TemplateDayRepository
+	repo repository.IDayRepository[model.TemplateDay]
 }
 
 // NewTemplateDayHandler создает экземпляр TemplateDayHandler
-func NewTemplateDayHandler(repo repository.TemplateDayRepository) *TemplateDayHandler {
+func NewTemplateDayHandler(repo repository.IDayRepository[model.TemplateDay]) *TemplateDayHandler {
 	return &TemplateDayHandler{repo: repo}
 }
 

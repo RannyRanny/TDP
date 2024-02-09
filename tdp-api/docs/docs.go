@@ -1012,6 +1012,51 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "telegram"
+                ],
+                "summary": "Telegram User Create",
+                "parameters": [
+                    {
+                        "description": "Data for authentication",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TelegramAuthData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Telegram User ID of the authenticated user",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "description of the error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid data signature or internal server error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

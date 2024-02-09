@@ -811,4 +811,33 @@ paths:
       summary: Telegram Authentication
       tags:
       - telegram
+  /user/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data for authentication
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.TelegramAuthData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: The Telegram User ID of the authenticated user
+          schema:
+            type: integer
+        "400":
+          description: description of the error
+          schema:
+            type: object
+        "500":
+          description: Invalid data signature or internal server error
+          schema:
+            type: object
+      summary: Telegram User Create
+      tags:
+      - telegram
 swagger: "2.0"

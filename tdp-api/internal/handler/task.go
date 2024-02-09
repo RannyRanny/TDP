@@ -11,11 +11,11 @@ import (
 
 // TaskHandler структура для обработчиков задач
 type TaskHandler struct {
-	repo repository.TaskRepository
+	repo repository.ITaskRepository[model.Task]
 }
 
 // NewTaskHandler создает экземпляр TaskHandler
-func NewTaskHandler(repo repository.TaskRepository) *TaskHandler {
+func NewTaskHandler(repo repository.ITaskRepository[model.Task]) *TaskHandler {
 	return &TaskHandler{repo: repo}
 }
 
@@ -131,11 +131,11 @@ func (h *TaskHandler) DeleteTask(c *gin.Context) {
 
 // TemplateTaskHandler структура для обработчиков задач
 type TemplateTaskHandler struct {
-	repo repository.TemplateTaskRepository
+	repo repository.ITaskRepository[model.TemplateTask]
 }
 
 // NewTemplateTaskHandler создает экземпляр TemplateTaskHandler
-func NewTemplateTaskHandler(repo repository.TemplateTaskRepository) *TemplateTaskHandler {
+func NewTemplateTaskHandler(repo repository.ITaskRepository[model.TemplateTask]) *TemplateTaskHandler {
 	return &TemplateTaskHandler{repo: repo}
 }
 

@@ -28,7 +28,7 @@ func main() {
 
 	r := gin.Default()
 
-	taskRepository := repository.NewTaskRepository(db)
+	taskRepository := repository.NewTaskRepository[model.Task](db)
 	taskHandler := handler.NewTaskHandler(taskRepository)
 
 	r.GET("/tasks/user/:userId", taskHandler.GetTasks)
@@ -37,7 +37,7 @@ func main() {
 	r.PUT("/tasks/:id", taskHandler.UpdateTask)
 	r.DELETE("/tasks/:id", taskHandler.DeleteTask)
 
-	templateTaskRepository := repository.NewTemplateTaskRepository(db)
+	templateTaskRepository := repository.NewTaskRepository[model.TemplateTask](db)
 	templateTaskHandler := handler.NewTemplateTaskHandler(templateTaskRepository)
 
 	r.GET("/tasks/template/user/:userId", templateTaskHandler.GetTasks)
@@ -46,7 +46,7 @@ func main() {
 	r.PUT("/tasks/template/:id", templateTaskHandler.UpdateTask)
 	r.DELETE("/tasks/template/:id", templateTaskHandler.DeleteTask)
 
-	templateDayRepository := repository.NewGormTemplateDayRepository(db)
+	templateDayRepository := repository.NewDayRepository[model.TemplateDay](db)
 	templateDayHandler := handler.NewTemplateDayHandler(templateDayRepository)
 	r.GET("/day/template/user/:userId", templateDayHandler.GetTemplateDays)
 	r.GET("/day/template/:id", templateDayHandler.GetTemplateDay)
@@ -54,7 +54,7 @@ func main() {
 	r.PUT("/day/template/:id", templateDayHandler.UpdateTemplateDay)
 	r.DELETE("/day/template/:id", templateDayHandler.DeleteTemplateDay)
 
-	dayRepository := repository.NewGormDayRepository(db)
+	dayRepository := repository.NewDayRepository[model.Day](db)
 	dayHandler := handler.NewDayHandler(dayRepository)
 	r.GET("/day/user/:userId", dayHandler.GetDays)
 	r.POST("/day", dayHandler.CreateDay)
