@@ -1,7 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-import Main from "./views/main";
+import DailyDashboard from "./views/daily-dashboard";
+import Settings from "./views/settings";
 
 export const routes = createBrowserRouter([{
     path: '/',
-    element: <Main />
+    element: <DailyDashboard />,
+}, {
+    path: '/settings',
+    element: <Settings />,
 }])

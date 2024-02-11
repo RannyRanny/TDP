@@ -1,8 +1,8 @@
 import React from 'react';
-import TaskList from "../../components/TaskList";
-import {ViewBase} from "../../shared/components/view-base/view-base";
+import { ViewBase} from "../../shared/components/view-base/view-base"
+import {TaskList} from '../../shared/components/tasks/task-list';
 
-const Main = () => {
+const DailyDashboard = () => {
     const today = new Date().toLocaleDateString('ru-Ru', { weekday: 'short', month: 'short', day: 'numeric' });
 
     return (
@@ -15,9 +15,9 @@ const Main = () => {
                 showButton: true
             }}
         >
-            список дел
+            <TaskList />
         </ViewBase>
     );
 }
 
-export default Main
+export default DailyDashboard
