@@ -1,5 +1,5 @@
-import React from "react";
-import { TaskListItemComponent } from "../task-list-item";
+import React from 'react';
+import { TaskListItemComponent } from '../task-list-item';
 
 const mockTasks = [{
     taskId: '1',

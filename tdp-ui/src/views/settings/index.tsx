@@ -1,5 +1,5 @@
-import {ViewBase} from "../../shared/components/view-base/view-base";
-import React from "react";
+import React from 'react';
+import { ViewBase } from '../../shared/components/view-base/view-base';
 
 const Settings = () => {
     return (

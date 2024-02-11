@@ -1,5 +1,5 @@
-import React from "react";
-import { TaskListItemProps } from "../typings";
+import React from 'react';
+import { TaskListItemProps } from '../typings';
 
 export const TaskListItemComponent = ({
     taskId,
