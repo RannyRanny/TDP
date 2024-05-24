@@ -448,7 +448,7 @@ const docTemplate = `{
         },
         "/day/user/{userId}": {
             "get": {
-                "description": "Get details of a template day by ID",
+                "description": "Get details of a day by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -458,12 +458,53 @@ const docTemplate = `{
                 "tags": [
                     "Days"
                 ],
-                "summary": "Get a template day",
+                "summary": "Get a day",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Template Day ID",
+                        "description": "Day ID",
                         "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Day"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/day/user/{userId}/{date}": {
+            "get": {
+                "description": "Get details of a day by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Days"
+                ],
+                "summary": "Get a day",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "userId",
                         "in": "path",
                         "required": true
                     }
@@ -489,7 +530,7 @@ const docTemplate = `{
         },
         "/day/{id}": {
             "get": {
-                "description": "Get details of a template day by ID",
+                "description": "Get details of a day by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -499,11 +540,11 @@ const docTemplate = `{
                 "tags": [
                     "Days"
                 ],
-                "summary": "Get a template day",
+                "summary": "Get a day",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Template Day ID",
+                        "description": "Day ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -525,7 +566,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update a template day by ID",
+                "description": "Update a day by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -535,17 +576,17 @@ const docTemplate = `{
                 "tags": [
                     "Days"
                 ],
-                "summary": "Update a template day",
+                "summary": "Update a day",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Template Day ID",
+                        "description": "Day ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Update Template Day",
+                        "description": "Update Day",
                         "name": "Day",
                         "in": "body",
                         "required": true,
@@ -570,7 +611,7 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete a template day by ID",
+                "description": "Delete a day by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -580,11 +621,11 @@ const docTemplate = `{
                 "tags": [
                     "Days"
                 ],
-                "summary": "Delete a template day",
+                "summary": "Delete a day",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Template Day ID",
+                        "description": "Day ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1012,6 +1053,51 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "telegram"
+                ],
+                "summary": "Telegram User Create",
+                "parameters": [
+                    {
+                        "description": "Data for authentication",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TelegramAuthData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Telegram User ID of the authenticated user",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "description of the error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid data signature or internal server error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1019,6 +1105,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "created_at": {
+                    "type": "string"
+                },
+                "date": {
                     "type": "string"
                 },
                 "deleted_at": {
@@ -1034,7 +1123,6 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "task_categories": {
-                    "description": "Пример использования встраивания для устранения дублирования.",
                     "type": "object",
                     "additionalProperties": {
                         "$ref": "#/definitions/model.TaskCategory"
@@ -1168,6 +1256,9 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
+                "date": {
+                    "type": "string"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -1181,7 +1272,6 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "task_categories": {
-                    "description": "Пример использования встраивания для устранения дублирования.",
                     "type": "object",
                     "additionalProperties": {
                         "$ref": "#/definitions/model.TaskCategory"

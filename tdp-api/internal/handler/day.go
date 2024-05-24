@@ -5,17 +5,18 @@ import (
 	"net/http"
 	"strconv"
 	"tdp-api/internal/model"
-	"tdp-api/internal/repository"
+	service "tdp-api/internal/services"
+	"time"
 )
 
 // DayHandler структура для обработчиков задач
 type DayHandler struct {
-	repo repository.DayRepository
+	service service.DayService
 }
 
 // NewDayHandler создает экземпляр DayHandler
-func NewDayHandler(repo repository.DayRepository) *DayHandler {
-	return &DayHandler{repo: repo}
+func NewDayHandler(service service.DayService) *DayHandler {
+	return &DayHandler{service: service}
 }
 
 // CreateDay godoc
@@ -36,7 +37,7 @@ func (h *DayHandler) CreateDay(c *gin.Context) {
 		return
 	}
 
-	createdDay, err := h.repo.Create(Day)
+	createdDay, err := h.service.CreateDay(Day)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -46,12 +47,12 @@ func (h *DayHandler) CreateDay(c *gin.Context) {
 }
 
 // GetDay godoc
-// @Summary Get a template day
-// @Description Get details of a template day by ID
+// @Summary Get a day
+// @Description Get details of a day by ID
 // @Tags Days
 // @Accept json
 // @Produce json
-// @Param id path int true "Template Day ID"
+// @Param id path int true "Day ID"
 // @Success 200 {object} model.Day
 // @Failure 404 {object} object  "Not found"
 // @Router /day/{id} [get]
@@ -62,7 +63,7 @@ func (h *DayHandler) GetDay(c *gin.Context) {
 		return
 	}
 
-	Day, err := h.repo.FindByID(uint(id))
+	Day, err := h.service.GetDay(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "template day not found"})
 		return
@@ -72,13 +73,13 @@ func (h *DayHandler) GetDay(c *gin.Context) {
 }
 
 // UpdateDay godoc
-// @Summary Update a template day
-// @Description Update a template day by ID
+// @Summary Update a day
+// @Description Update a day by ID
 // @Tags Days
 // @Accept json
 // @Produce json
-// @Param id path int true "Template Day ID"
-// @Param Day body model.Day true "Update Template Day"
+// @Param id path int true "Day ID"
+// @Param Day body model.Day true "Update Day"
 // @Success 200 {object} model.Day
 // @Failure 404 {object} object  "Not found"
 // @Router /day/{id} [put]
@@ -89,7 +90,7 @@ func (h *DayHandler) UpdateDay(c *gin.Context) {
 		return
 	}
 
-	updatedDay, err := h.repo.Update(Day)
+	updatedDay, err := h.service.UpdateDay(Day)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -99,12 +100,12 @@ func (h *DayHandler) UpdateDay(c *gin.Context) {
 }
 
 // DeleteDay godoc
-// @Summary Delete a template day
-// @Description Delete a template day by ID
+// @Summary Delete a day
+// @Description Delete a day by ID
 // @Tags Days
 // @Accept json
 // @Produce json
-// @Param id path int true "Template Day ID"
+// @Param id path int true "Day ID"
 // @Success 204 "No Content"
 // @Failure 404 {object} object  "Not found"
 // @Router /day/{id} [delete]
@@ -115,7 +116,7 @@ func (h *DayHandler) DeleteDay(c *gin.Context) {
 		return
 	}
 
-	err = h.repo.Delete(uint(id))
+	err = h.service.DeleteDay(uint(id))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -123,18 +124,40 @@ func (h *DayHandler) DeleteDay(c *gin.Context) {
 }
 
 // GetDays godoc
-// @Summary Get a template day
-// @Description Get details of a template day by ID
+// @Summary Get a day
+// @Description Get details of a day by ID
 // @Tags Days
 // @Accept json
 // @Produce json
-// @Param id path int true "Template Day ID"
+// @Param id path int true "Day ID"
 // @Success 200 {array} model.Day
 // @Failure 404 {object} object  "Not found"
 // @Router /day/user/{userId} [get]
 func (h *DayHandler) GetDays(c *gin.Context) {
 	userId, _ := strconv.Atoi(c.Param("userId"))
-	tasks, err := h.repo.GetDays(uint(userId))
+	tasks, err := h.service.GetDays(uint(userId))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, tasks)
+
+}
+
+// GetDaysByDate godoc
+// @Summary Get a day
+// @Description Get details of a day by ID
+// @Tags Days
+// @Accept json
+// @Produce json
+// @Param userId path int true "User ID"
+// @Success 200 {array} model.Day
+// @Failure 404 {object} object  "Not found"
+// @Router /day/user/{userId}/{date} [get]
+func (h *DayHandler) GetDaysByDate(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Param("userId"))
+	date, err := time.Parse("2006-01-02", c.Param("date"))
+	tasks, err := h.service.GetDaysByDate(date, uint(userId))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -145,12 +168,12 @@ func (h *DayHandler) GetDays(c *gin.Context) {
 
 // TemplateDayHandler структура для обработчиков задач
 type TemplateDayHandler struct {
-	repo repository.TemplateDayRepository
+	service service.DayService
 }
 
 // NewTemplateDayHandler создает экземпляр TemplateDayHandler
-func NewTemplateDayHandler(repo repository.TemplateDayRepository) *TemplateDayHandler {
-	return &TemplateDayHandler{repo: repo}
+func NewTemplateDayHandler(service service.DayService) *TemplateDayHandler {
+	return &TemplateDayHandler{service: service}
 }
 
 // CreateTemplateDay godoc
@@ -171,7 +194,7 @@ func (h *TemplateDayHandler) CreateTemplateDay(c *gin.Context) {
 		return
 	}
 
-	createdTemplateDay, err := h.repo.Create(templateDay)
+	createdTemplateDay, err := h.service.CreateTemplateDay(templateDay)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -197,7 +220,7 @@ func (h *TemplateDayHandler) GetTemplateDay(c *gin.Context) {
 		return
 	}
 
-	templateDay, err := h.repo.FindByID(uint(id))
+	templateDay, err := h.service.GetDay(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "template day not found"})
 		return
@@ -224,7 +247,7 @@ func (h *TemplateDayHandler) UpdateTemplateDay(c *gin.Context) {
 		return
 	}
 
-	updatedTemplateDay, err := h.repo.Update(templateDay)
+	updatedTemplateDay, err := h.service.UpdateTemplateDay(templateDay)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -250,7 +273,7 @@ func (h *TemplateDayHandler) DeleteTemplateDay(c *gin.Context) {
 		return
 	}
 
-	err = h.repo.Delete(uint(id))
+	err = h.service.DeleteTemplateDay(uint(id))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -270,7 +293,7 @@ func (h *TemplateDayHandler) DeleteTemplateDay(c *gin.Context) {
 func (h *TemplateDayHandler) GetTemplateDays(c *gin.Context) {
 
 	userId, _ := strconv.Atoi(c.Param("userId"))
-	tasks, err := h.repo.GetDays(uint(userId))
+	tasks, err := h.service.GetTemplateDays(uint(userId))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

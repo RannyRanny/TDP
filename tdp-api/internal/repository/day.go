@@ -2,6 +2,7 @@ package repository
 
 import (
 	"tdp-api/internal/model"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -10,6 +11,7 @@ type DayRepository interface {
 	GetDays(userId uint) ([]model.Day, error)
 	Create(day model.Day) (model.Day, error)
 	FindByID(id uint) (model.Day, error)
+	FindByDate(date time.Time, userId uint) ([]model.Day, error)
 	Update(day model.Day) (model.Day, error)
 	Delete(id uint) error
 }
@@ -26,13 +28,14 @@ type GormDayRepository struct {
 	db *gorm.DB
 }
 
+func NewGormDayRepository(db *gorm.DB) DayRepository {
+	return &GormDayRepository{db: db}
+}
+
 func (r *GormDayRepository) GetDays(userId uint) ([]model.Day, error) {
 	var days []model.Day
 	result := r.db.Preload("TaskCategory").Where("user_id = ?", userId).Find(&days)
 	return days, result.Error
-}
-func NewGormDayRepository(db *gorm.DB) DayRepository {
-	return &GormDayRepository{db: db}
 }
 
 func (r *GormDayRepository) Create(day model.Day) (model.Day, error) {
@@ -44,6 +47,20 @@ func (r *GormDayRepository) FindByID(id uint) (model.Day, error) {
 	var day model.Day
 	result := r.db.Preload("User").First(&day, id)
 	return day, result.Error
+}
+
+func (r *GormDayRepository) FindByDate(date time.Time, userId uint) ([]model.Day, error) {
+	var days []model.Day
+
+	result := r.db.Preload("TaskCategory").
+		Where("user_id = ? AND DATE(date) = ?", userId, date.Format("2006-01-02")).
+		Find(&days)
+
+	if result.Error != nil {
+		return days, result.Error
+	}
+
+	return days, nil
 }
 
 func (r *GormDayRepository) Update(day model.Day) (model.Day, error) {

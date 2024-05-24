@@ -11,6 +11,7 @@ type BaseDay struct {
 	CreatedAt time.Time        `json:"created_at"`
 	UpdatedAt time.Time        `json:"updated_at"`
 	DeletedAt *time.Time       `json:"deleted_at" gorm:"index"`
+	Date      time.Time        `json:"date"`
 	StartHour int              `json:"start_hour"`
 	EndHour   int              `json:"end_hour"`
 	UserID    uint             `json:"user_id"`
@@ -21,7 +22,7 @@ type BaseDay struct {
 type TemplateDay struct {
 	BaseDay
 	TaskCategoriesJson json.RawMessage      `json:"-" gorm:"type:json"`
-	TaskCategories     map[int]TaskCategory `json:"task_categories" gorm:"-"` // Пример использования встраивания для устранения дублирования.
+	TaskCategories     map[int]TaskCategory `json:"task_categories" gorm:"-"`
 	TasksJson          json.RawMessage      `json:"-" gorm:"type:json"`
 	Tasks              map[int]TemplateTask `json:"tasks" gorm:"-"`
 }
@@ -30,7 +31,7 @@ type TemplateDay struct {
 type Day struct {
 	BaseDay
 	TaskCategoriesJson json.RawMessage      `json:"-" gorm:"type:json"`
-	TaskCategories     map[int]TaskCategory `json:"task_categories" gorm:"-"` // Пример использования встраивания для устранения дублирования.
+	TaskCategories     map[int]TaskCategory `json:"task_categories" gorm:"-"`
 	TasksJson          json.RawMessage      `json:"-" gorm:"type:json"`
 	Tasks              map[int]Task         `json:"tasks" gorm:"-"`
 }
