@@ -5,6 +5,7 @@ import (
 	"tdp-api/internal/handler"
 	"tdp-api/internal/model"
 	"tdp-api/internal/repository"
+	service "tdp-api/internal/services"
 
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files" // swagger embed files
@@ -57,6 +58,7 @@ func main() {
 	dayRepository := repository.NewGormDayRepository(db)
 	dayHandler := handler.NewDayHandler(dayRepository)
 	r.GET("/day/user/:userId", dayHandler.GetDays)
+	r.GET("/day/user/:userId/:date", dayHandler.GetDaysByDate)
 	r.POST("/day", dayHandler.CreateDay)
 	r.GET("/day/:id", dayHandler.GetDay)
 	r.PUT("/day/:id", dayHandler.UpdateDay)
@@ -74,7 +76,8 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	telegramRepository := repository.NewGormTelegramAuthRepository(db)
-	telegramAuthHandler := handler.NewTelegramHandler(telegramRepository)
+	telegramService := service.NewTelegramService(telegramRepository)
+	telegramAuthHandler := handler.NewTelegramHandler(telegramService)
 	r.POST("/telegram/auth", telegramAuthHandler.TelegramAuth)
 	r.POST("/user/create", telegramAuthHandler.CreateUser)
 
